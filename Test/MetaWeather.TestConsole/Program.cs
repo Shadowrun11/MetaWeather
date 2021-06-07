@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
+﻿
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
 
 namespace MetaWeather.TestConsole
 {
@@ -11,20 +14,24 @@ namespace MetaWeather.TestConsole
 
         public static IHost Hosting => __Hosting ??= CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
 
-        public static IServiceProvider Services = Hosting.Services;
-        public static IHostBuilder CreateHostBuilder(string[] args) => Host.
-            CreateDefaultBuilder(args).
-            ConfigureServices(ConfigureServices);
+        public static IServiceProvider Services => Hosting.Services;
+        public static IHostBuilder CreateHostBuilder(string[] args) => Host
+            .CreateDefaultBuilder(args)
+            .ConfigureServices(ConfigureServices);
 
         private static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
         {
-
+            services.AddHttpClient<MetaWeatherClient>(client => client.BaseAddress = new Uri(host.Configuration["MetaWeather"]));
         }
 
         static async Task Main(string[] args)
         {
             using var host = Hosting;
             await host.StartAsync();
+
+            var weather = Services.GetRequiredService<MetaWeatherClient>();
+
+            var local = await weather.GetLocationByName("Moscow");
 
             Console.WriteLine("Завершено!");
             Console.ReadLine();
