@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace MetaWeather
+namespace MetaWeather.Models
 {
     public class WeatherLocation
     {
@@ -20,5 +20,7 @@ namespace MetaWeather
 
         [JsonPropertyName("distance")]
         public int Distance { get; set; }
+
+        public override string ToString() => $"{Title}[{Id}]({Type}):{Location} ({Distance})";
     }
 }

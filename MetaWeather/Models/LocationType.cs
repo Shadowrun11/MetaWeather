@@ -1,4 +1,4 @@
-﻿namespace MetaWeather
+﻿namespace MetaWeather.Models
 {
     public enum LocationType
     {

@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿using MetaWeather.Models;
+using System.Globalization;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,9 +22,15 @@ namespace MetaWeather
         //    }
         //};
 
-        public async Task<WeatherLocation[]> GetLocationByName(string Name, CancellationToken Cancel = default)
+        public async Task<WeatherLocation[]> GetLocation(string Name, CancellationToken Cancel = default)
         {
             return await _Client.GetFromJsonAsync<WeatherLocation[]>($"/api/location/search/?query={Name}", /*__JsonOptions,*/ Cancel)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<WeatherLocation[]> GetLocation((double Latitube, double Longitude) Location, CancellationToken Cancel = default)
+        {
+            return await _Client.GetFromJsonAsync<WeatherLocation[]>($"/api/location/search/?lattlong={Location.Latitube.ToString(CultureInfo.InvariantCulture)},{Location.Longitude.ToString(CultureInfo.InvariantCulture)}", /*__JsonOptions,*/ Cancel)
                 .ConfigureAwait(false);
         }
     }
