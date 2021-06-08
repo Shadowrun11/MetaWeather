@@ -33,5 +33,11 @@ namespace MetaWeather
             return await _Client.GetFromJsonAsync<WeatherLocation[]>($"/api/location/search/?lattlong={Location.Latitube.ToString(CultureInfo.InvariantCulture)},{Location.Longitude.ToString(CultureInfo.InvariantCulture)}", /*__JsonOptions,*/ Cancel)
                 .ConfigureAwait(false);
         }
+
+        public async Task<LocationInfo> GetInfo(int WoeId, CancellationToken Cancel = default)
+        {
+            return await _Client.GetFromJsonAsync<LocationInfo>($"/api/location/{WoeId}", Cancel).ConfigureAwait(false);
+        }
+
     }
 }
